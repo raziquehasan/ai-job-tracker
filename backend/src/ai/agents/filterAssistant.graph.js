@@ -20,11 +20,11 @@ let model;
 if (process.env.GOOGLE_AI_API_KEY) {
     model = new ChatGoogleGenerativeAI({
         apiKey: process.env.GOOGLE_AI_API_KEY,
-        model: "gemini-1.5-flash", // Using 1.5 for better regional availability and stability
+        model: "gemini-1.5-pro",
         temperature: 0.1,
         convertSystemMessageToHumanContent: true,
     });
-    console.log("✅ Assistant using: Google Gemini 1.5");
+    console.log("✅ Assistant using: Google Gemini 1.5 Pro");
 } else if (process.env.OPENAI_API_KEY) {
     model = new ChatOpenAI({
         apiKey: process.env.OPENAI_API_KEY,
