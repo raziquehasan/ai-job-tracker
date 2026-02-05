@@ -13,7 +13,14 @@ function buildApp() {
 
   // Register CORS
   app.register(cors, {
-    origin: true
+    origin: (origin, cb) => {
+      // Trust all origins for now to resolve persistent CORS blocks in production
+      // In a strict production environment, we would match against process.env.FRONTEND_URL
+      cb(null, true);
+    },
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
   });
 
   // Register multipart for file uploads
