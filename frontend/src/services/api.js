@@ -4,7 +4,8 @@ const getBaseUrl = () => {
     const rawUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000/api';
     if (rawUrl.endsWith('/api')) return rawUrl;
     if (rawUrl.endsWith('/api/')) return rawUrl.slice(0, -1);
-    return `${rawUrl.replace(/\/$/, '')}/api`;
+    const base = rawUrl.replace(/\/$/, '');
+    return base.endsWith('/api') ? base : `${base}/api`;
 };
 
 const API_BASE_URL = getBaseUrl();
@@ -15,7 +16,7 @@ const api = axios.create({
     headers: {
         'Content-Type': 'application/json',
     },
-    timeout: 30000, // 30 seconds
+    timeout: 60000, // 60 seconds for Render wake-up + AI processing
 });
 
 // Response interceptor for error handling
