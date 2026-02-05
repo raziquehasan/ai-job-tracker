@@ -20,11 +20,11 @@ class MatchingService {
         if (geminiKey) {
             this.llm = new ChatGoogleGenerativeAI({
                 apiKey: geminiKey,
-                model: 'gemini-2.0-flash',
+                model: 'gemini-1.5-flash', // Using 1.5 for better regional availability and stability
                 temperature: 0.3,
                 maxOutputTokens: 500
             });
-            console.log('✅ Initialized LLM: Google Gemini 2.0');
+            console.log('✅ Initialized LLM: Google Gemini 1.5');
         } else if (openaiKey) {
             this.llm = new ChatOpenAI({
                 apiKey: openaiKey,

@@ -20,11 +20,11 @@ let model;
 if (process.env.GOOGLE_AI_API_KEY) {
     model = new ChatGoogleGenerativeAI({
         apiKey: process.env.GOOGLE_AI_API_KEY,
-        model: "gemini-2.0-flash",
+        model: "gemini-1.5-flash", // Using 1.5 for better regional availability and stability
         temperature: 0.1,
         convertSystemMessageToHumanContent: true,
     });
-    console.log("✅ Assistant using: Google Gemini 2.0");
+    console.log("✅ Assistant using: Google Gemini 1.5");
 } else if (process.env.OPENAI_API_KEY) {
     model = new ChatOpenAI({
         apiKey: process.env.OPENAI_API_KEY,
@@ -45,11 +45,17 @@ async function processQuery(state) {
     const lastMessage = state.messages[state.messages.length - 1].content;
     console.log("User Message:", lastMessage);
 
-    const response = await model.invoke([
-        ["system", ASSISTANT_SYSTEM_PROMPT],
-        ["user", lastMessage]
-    ]);
-    console.log("🤖 AI Response received");
+    let response;
+    try {
+        response = await model.invoke([
+            ["system", ASSISTANT_SYSTEM_PROMPT],
+            ["user", lastMessage]
+        ]);
+        console.log("✅ AI Response received");
+    } catch (llmError) {
+        console.error("❌ LLM Invocation Error:", llmError.message);
+        throw llmError; // Re-throw for route handler to catch
+    }
     let content = response.content;
 
     // Clean the response

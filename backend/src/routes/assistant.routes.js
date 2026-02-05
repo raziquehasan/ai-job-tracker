@@ -34,10 +34,11 @@ async function assistantRoutes(fastify, options) {
 
         } catch (error) {
             fastify.log.error(error);
+            // Provide more detail in development/debugging
             return reply.code(500).send({
                 success: false,
-                message: "Error processing assistant message",
-                error: error.message
+                message: "AI Processing Error",
+                error: error.message || "Unknown error occurred"
             });
         }
     });
