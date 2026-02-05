@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import ApplicationCard from '../components/ApplicationCard';
+import { applicationsAPI } from '../services/api';
 import './Applications.css';
 
 function Applications() {
@@ -18,8 +19,7 @@ function Applications() {
     const fetchApplications = async () => {
         setLoading(true);
         try {
-            const response = await fetch('http://localhost:4000/api/applications');
-            const data = await response.json();
+            const data = await applicationsAPI.getAll();
             setApplications(data);
         } catch (error) {
             console.error('Error fetching applications:', error);
@@ -34,18 +34,9 @@ function Applications() {
 
     const handleUpdateStatus = async (applicationId, newStatus) => {
         try {
-            const response = await fetch(`http://localhost:4000/api/applications/${applicationId}/status`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ status: newStatus })
-            });
-
-            if (response.ok) {
-                // Refresh applications list
-                fetchApplications();
-            }
+            await applicationsAPI.updateStatus(applicationId, newStatus);
+            // Refresh applications list
+            fetchApplications();
         } catch (error) {
             console.error('Error updating application status:', error);
         }

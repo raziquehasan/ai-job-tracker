@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { assistantAPI } from '../services/api';
 
 const ChatAssistant = ({ onFilterUpdate }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -25,13 +26,7 @@ const ChatAssistant = ({ onFilterUpdate }) => {
         setIsLoading(true);
 
         try {
-            const response = await fetch('http://localhost:4000/api/assistant/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMsg })
-            });
-
-            const data = await response.json();
+            const data = await assistantAPI.chat(userMsg);
 
             if (data.success) {
                 setChat(prev => [...prev, { role: 'ai', text: data.data.message }]);
@@ -71,8 +66,8 @@ const ChatAssistant = ({ onFilterUpdate }) => {
                         {chat.map((msg, i) => (
                             <div key={i} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
                                 <div className={`max-w-[80%] rounded-2xl px-4 py-2 text-sm ${msg.role === 'user'
-                                        ? 'bg-indigo-600 text-white rounded-tr-none'
-                                        : 'bg-white text-gray-800 shadow-sm border border-gray-100 rounded-tl-none'
+                                    ? 'bg-indigo-600 text-white rounded-tr-none'
+                                    : 'bg-white text-gray-800 shadow-sm border border-gray-100 rounded-tl-none'
                                     }`}>
                                     {msg.text}
                                 </div>
