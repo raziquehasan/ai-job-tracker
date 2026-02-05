@@ -3,7 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import './Login.css';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000';
+const getBaseUrl = () => {
+    const rawUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+    if (rawUrl.endsWith('/api')) return rawUrl;
+    if (rawUrl.endsWith('/api/')) return rawUrl.slice(0, -1);
+    return `${rawUrl.replace(/\/$/, '')}/api`;
+};
+
+const API_URL = getBaseUrl();
 
 function Login() {
     const [email, setEmail] = useState('');
